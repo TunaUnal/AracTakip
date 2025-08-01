@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import TimeCounter from './TimeCounter'
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale'; // Türkçe aylar ve günler için
+import { Link } from 'react-router-dom';
 
 function ActiveTripComponent() {
 
     const dispatch = useDispatch()
     const { activeTrip } = useSelector(store => store.trip)
-
+    console.log("============================")
 
     return (
         <div className="card shadow-lg border-0 rounded-4">
@@ -42,7 +43,7 @@ function ActiveTripComponent() {
                         </div>
 
                         <div className="mt-4 d-grid">
-                            <button className="btn btn-primary btn-lg rounded-pill">Unlock</button>
+                            <Link className="btn btn-primary btn-lg rounded-pill" to={"/trip/complete"} >Seyehati Bitir</Link>
                         </div>
                     </div>
                 </div>

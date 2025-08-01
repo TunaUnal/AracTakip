@@ -77,6 +77,17 @@ export const fetchActiveTripAPI = (credentials) => {
 };
 
 /**
+ * QR Kodu okutulan aracı getirir.
+ * @returns {Promise<object>}
+ */
+export const completeTripAPI = (credentials) => {
+    return apiClient.post('index.php', {
+        ...credentials,
+        type: 'completeTrip'
+    });
+};
+
+/**
  * Araç listesini getiren API çağrısı yapar.
  * @returns {Promise<object>}
  */

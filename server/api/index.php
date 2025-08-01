@@ -234,7 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		case 'activeTrip':
 			check_auth(); //Login yeterli
-
 			$sql = "
 				SELECT 
 					t.*, 
@@ -264,7 +263,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
 			break;
-		default:
+		case 'completeTrip':
+			check_auth();
+			
+		
+			default:
 			send_response(['success' => false, 'message' => 'Unknown type'], 400);
 	}
 }

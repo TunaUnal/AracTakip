@@ -2,6 +2,7 @@
 import Header from '../components/GeneralComponents/Header'
 import Sidebar from '../components/GeneralComponents/Sidebar'
 import Footer from '../components/GeneralComponents/Footer'
+import ActiveTripBanner from '../components/ActiveTripPageComponents/ActiveTripBanner'
 
 function Main() {
 

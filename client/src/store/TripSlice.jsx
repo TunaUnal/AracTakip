@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { startTripAPI, fetchActiveTripAPI } from './api';
+import { startTripAPI, fetchActiveTripAPI, completeTripAPI } from './api';
 
 const initialState = {
 	/**
@@ -66,6 +66,23 @@ export const fetchActiveTrip = createAsyncThunk('trip/fetch', async (_, { reject
 	}
 });
 
+export const completeTrip = createAsyncThunk('trip/complete', async (_, { rejectWithValue }) => {
+	try {
+		const response = await completeTripAPI();
+		if (response.data.success) {
+			return response.data;
+		} else {
+			return rejectWithValue(response.data);
+		}
+	} catch (error) {
+		if (error.response && error.response.data) {
+			return rejectWithValue(error.response.data);
+		} else {
+			return rejectWithValue({ error: 'Beklenmedik bir hata oluştu. Seyehat bitirilemedi' });
+		}
+	}
+});
+
 
 
 export const TripSlice = createSlice({
@@ -108,6 +125,22 @@ export const TripSlice = createSlice({
 				state.activeTrip = null;
 				state.error = action.payload?.error || 'Aktif trip bilgisi getirilemedi';
 				localStorage.removeItem('currentTrip');
+			});
+
+		builder
+			.addCase(completeTrip.pending, (state, action) => {
+				state.loading = true;
+			})
+			.addCase(completeTrip.fulfilled, (state, action) => {
+				state.loading = false;
+				state.activeTrip = null;
+				state.error = null;
+				localStorage.removeItem('currentTrip');
+			})
+			.addCase(completeTrip.rejected, (state, action) => {
+				state.loading = false;
+				state.activeTrip = null;
+				state.error = action.payload?.error || 'Aktif trip sonlandırılamadı';
 			});
 
 	}

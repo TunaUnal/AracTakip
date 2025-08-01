@@ -30,30 +30,6 @@ function ActiveTripPage() {
                 <div className='pagetitle'>
                     <h1>Aktif Seyehatim</h1>
                 </div>
-                {/*
-                {
-                    "id": 2,
-                    "user_id": 1,
-                    "vehicle_id": 1,
-                    "assigned_by": null,
-                    "request_date": null,
-                    "assigned_date": null,
-                    "start_time": "2025-08-01 00:31:30",
-                    "first_photo": null,
-                    "returned_date": null,
-                    "last_photo": null,
-                    "destination": "İstanbul Havalimanı",
-                    "reason": "Talebe Hizmeti",
-                    "return_estimate": "2025-08-01 02:00:00",
-                    "description": "Talebeleri havalimanına bırakacağım",
-                    "crtdate": "2025-08-01 00:31:30",
-                    "crtuser": 1,
-                    "status": "active"
-                }
-                
-                
-                
-                */}
                 <section className='section dashboard'>
                     <div className='row'>
                         <div className='col-12'>

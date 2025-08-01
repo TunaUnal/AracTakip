@@ -32,11 +32,13 @@ function App() {
 	}, [dispatch, user.status]);
 
 	useEffect(() => {
-		if (activeTrip && location.pathname !== '/trip/active') {
-			console.log('Aktif yolculuk bulundu, yönlendiriliyor:', activeTrip);
-			navigate('/trip/active');
+		if (activeTrip) {
+			document.body.classList.add('has-banner');
+		} else {
+			document.body.classList.remove('has-banner');
 		}
-	}, [activeTrip, navigate, location.pathname]);
+	}, [activeTrip]);
+
 
 
 
@@ -49,8 +51,9 @@ function App() {
 
 				<Routes>
 					<Route path='/' element={<Main />} />
-					<Route path='/trips/start' element={<StartTripPage />} />
+					<Route path='/trip/start' element={<StartTripPage />} />
 					<Route path='/trip/active' element={<ActiveTripPage></ActiveTripPage>}></Route>
+					<Route path='/trip/complete' element={<ActiveTripPage></ActiveTripPage>}></Route>
 					<Route path='*' element={<NotFoundPage />} />
 				</Routes>
 			</div>
