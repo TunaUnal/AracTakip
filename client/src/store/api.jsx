@@ -58,10 +58,21 @@ export const getVehicleAPI = (credentials) => {
  * QR Kodu okutulan aracı getirir.
  * @returns {Promise<object>}
  */
-export const validateVehicleAPI = (credentials) => {
+export const startTripAPI = (credentials) => {
     return apiClient.post('index.php', {
         ...credentials,
-        type: 'validateVechile'
+        type: 'startTrip'
+    });
+};
+
+/**
+ * QR Kodu okutulan aracı getirir.
+ * @returns {Promise<object>}
+ */
+export const fetchActiveTripAPI = (credentials) => {
+    return apiClient.post('index.php', {
+        ...credentials,
+        type: 'activeTrip'
     });
 };
 

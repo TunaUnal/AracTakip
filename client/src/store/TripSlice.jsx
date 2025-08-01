@@ -1,17 +1,40 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getVehicleAPI, validateVehicleAPI } from './api';
+import { startTripAPI, fetchActiveTripAPI } from './api';
 
 const initialState = {
-	isDrivingNow: false,
-	selectedVehicle: localStorage.getItem('selected_vechile') ? JSON.parse(localStorage.getItem('selected_vechile')) : null,
-	loading: '',
-	error: ""
+	/**
+	 * Şu anda aktif olarak devam eden yolculuğu tutar.
+	 * Eğer aktif bir yolculuk yoksa bu değer 'null' olacaktır.
+	 * UI'da "if (activeTrip) { ... }" gibi kontrollerle bir yolculuğun
+	 * devam edip etmediğini kolayca anlayabiliriz.
+	 * Örnek Değer: { tripId: 'xyz-123', vehicleId: 'veh-456', destination: '...', startTime: '...' }
+	 */
+	activeTrip: localStorage.getItem('currentTrip') ? JSON.parse(localStorage.getItem('currentTrip')) : null,
+
+	/**
+	 * Kullanıcının tamamlanmış veya iptal edilmiş tüm geçmiş yolculuklarını
+	 * bir dizi içinde tutar. "Yolculuklarım" gibi bir sayfa için kullanılır.
+	 */
+	tripHistory: [],
+
+	/**
+	 * Genel bir yüklenme durumu. Genellikle veri "çekme" işlemleri
+	 * (GET requestleri) için kullanılır. Örneğin, yolculuk geçmişini çekerken
+	 * bir sayfa yükleme göstergesi (loader) göstermek için idealdir.
+	 */
+	loading: false,
+
+	/**
+	 * Herhangi bir API isteği başarısız olduğunda hata mesajını tutar.
+	 * Eğer bir hata yoksa bu değer 'null' olacaktır. UI'da hata mesajlarını
+	 * göstermek için kullanılır.
+	 */
+	error: null,
 }
 
-
-export const getVehicle = createAsyncThunk('vehicle/get', async (credentials, { rejectWithValue }) => {
+export const startTrip = createAsyncThunk('trip/start', async (credentials, { rejectWithValue }) => {
 	try {
-		const response = await getVehicleAPI(credentials);
+		const response = await startTripAPI(credentials);
 		if (response.data.success) {
 			return response.data;
 		} else {
@@ -21,14 +44,14 @@ export const getVehicle = createAsyncThunk('vehicle/get', async (credentials, { 
 		if (error.response && error.response.data) {
 			return rejectWithValue(error.response.data);
 		} else {
-			return rejectWithValue({ error: 'Beklenmedik bir hata oluştu. Araç çekilemedi' });
+			return rejectWithValue({ error: 'Beklenmedik bir hata oluştu. Seyehat başlatılamadı' });
 		}
 	}
 });
 
-export const validateVehicle = createAsyncThunk('vehicle/validate', async (credentials, { rejectWithValue }) => {
+export const fetchActiveTrip = createAsyncThunk('trip/fetch', async (_, { rejectWithValue }) => {
 	try {
-		const response = await validateVehicleAPI(credentials);
+		const response = await fetchActiveTripAPI();
 		if (response.data.success) {
 			return response.data;
 		} else {
@@ -38,11 +61,10 @@ export const validateVehicle = createAsyncThunk('vehicle/validate', async (crede
 		if (error.response && error.response.data) {
 			return rejectWithValue(error.response.data);
 		} else {
-			return rejectWithValue({ error: 'Beklenmedik bir hata oluştu. Araç çekilemedi' });
+			return rejectWithValue({ error: 'Beklenmedik bir hata oluştu. Aktif seyehat sorgulanamadı' });
 		}
 	}
 });
-
 
 
 
@@ -52,22 +74,40 @@ export const TripSlice = createSlice({
 	reducers: {
 	},
 	extraReducers: (builder) => {
+
 		builder
-			.addCase(getVehicle.pending, (state) => {
+			.addCase(startTrip.pending, (state) => {
 				state.loading = true;
 				state.error = null;
 			})
-			.addCase(getVehicle.fulfilled, (state, action) => {
+			.addCase(startTrip.fulfilled, (state, action) => {
 				state.loading = false;
-				state.selectedVehicle = action.payload.data;
+				state.activeTrip = action.payload.data;
 				state.error = null;
-				localStorage.setItem('selected_vechile', JSON.stringify(action.payload.data));
+				localStorage.setItem('currentTrip', JSON.stringify(action.payload.data));
 			})
-			.addCase(getVehicle.rejected, (state, action) => {
+			.addCase(startTrip.rejected, (state, action) => {
 				state.loading = false;
-				state.selectedVehicle = null;
-				state.error = action.payload?.error || 'Giriş yapılamadı.';
-				localStorage.removeItem('selected_vechile');
+				state.error = action.payload?.error || 'Araç alınamadı';
+				localStorage.removeItem('currentTrip');
+			});
+		builder
+			.addCase(fetchActiveTrip.pending, (state, action) => {
+				if (!state.activeTrip) {
+					state.loading = true;
+				}
+			})
+			.addCase(fetchActiveTrip.fulfilled, (state, action) => {
+				state.loading = false;
+				state.activeTrip = action.payload.data;
+				state.error = null;
+				localStorage.setItem('currentTrip', JSON.stringify(action.payload.data));
+			})
+			.addCase(fetchActiveTrip.rejected, (state, action) => {
+				state.loading = false;
+				state.activeTrip = null;
+				state.error = action.payload?.error || 'Aktif trip bilgisi getirilemedi';
+				localStorage.removeItem('currentTrip');
 			});
 
 	}
