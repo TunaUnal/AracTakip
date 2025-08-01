@@ -4,12 +4,12 @@ import TimeCounter from './TimeCounter'
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale'; // Türkçe aylar ve günler için
 import { Link } from 'react-router-dom';
-
+import { memo } from 'react';
 function ActiveTripComponent() {
 
     const dispatch = useDispatch()
     const { activeTrip } = useSelector(store => store.trip)
-    console.log("============================")
+    
 
     return (
         <div className="card shadow-lg border-0 rounded-4">
@@ -52,4 +52,4 @@ function ActiveTripComponent() {
     )
 }
 
-export default ActiveTripComponent
+export default memo(ActiveTripComponent)

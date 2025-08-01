@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import { useDispatch, useSelector } from "react-redux"
 import { logout } from '../../store/UserSlice'
 import ActiveTripBanner from '../ActiveTripPageComponents/ActiveTripBanner'
@@ -10,7 +10,6 @@ function Header() {
     const handleLogout = () => {
         dispatch(logout())
     }
-    console.log("renderrrrrrrrrrrrrr")
 
     return (
         <>
@@ -47,4 +46,4 @@ function Header() {
     )
 }
 
-export default Header
+export default memo(Header)

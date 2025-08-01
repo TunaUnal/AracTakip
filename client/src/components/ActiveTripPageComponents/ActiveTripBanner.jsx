@@ -1,18 +1,25 @@
 // ActiveTripBanner.jsx
 
-import React, {useEffect} from 'react';
+import React, {memo, useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import TimeCounter from './TimeCounter';
 import { Link } from 'react-router-dom';
 function ActiveTripBanner() {
     const { activeTrip } = useSelector(store => store.trip);
-    console.log("renderr")
+    
+    useEffect(() => {
+      if (activeTrip) {
+        document.body.classList.add("has-banner")
+      }else{
+        document.body.classList.remove('has-banner')
+      }
+    }, [activeTrip])
     
 
     if (!activeTrip) {
         return null;
     }
-
+    console.log(activeTrip.start_time +" ı Time a gönderdim abi")
 
     return (
 
@@ -39,7 +46,7 @@ function ActiveTripBanner() {
 
             <div className="flex-grow-1">
                 <div>
-                    <strong>Aktif Seyehat</strong> - <TimeCounter startTime={activeTrip.start_time} />
+                    <strong>Aktif Seyehat</strong> - <TimeCounter time={activeTrip.start_time} />
                     <br />
                     <span>{activeTrip.brand} {activeTrip.model} - <strong>{activeTrip.plate}</strong></span>
                 </div>
@@ -53,4 +60,4 @@ function ActiveTripBanner() {
     );
 }
 
-export default ActiveTripBanner;
+export default memo(ActiveTripBanner);

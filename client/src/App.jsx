@@ -16,8 +16,6 @@ import ActiveTripPage from './pages/ActiveTrip'
 function App() {
 
 	const user = useSelector(store => store.user)
-	const activeTrip = useSelector(store => store.trip.activeTrip)
-	const navigate = useNavigate()
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -31,13 +29,7 @@ function App() {
 		}
 	}, [dispatch, user.status]);
 
-	useEffect(() => {
-		if (activeTrip) {
-			document.body.classList.add('has-banner');
-		} else {
-			document.body.classList.remove('has-banner');
-		}
-	}, [activeTrip]);
+
 
 
 

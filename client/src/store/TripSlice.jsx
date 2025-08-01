@@ -115,10 +115,26 @@ export const TripSlice = createSlice({
 				}
 			})
 			.addCase(fetchActiveTrip.fulfilled, (state, action) => {
-				state.loading = false;
-				state.activeTrip = action.payload.data;
-				state.error = null;
-				localStorage.setItem('currentTrip', JSON.stringify(action.payload.data));
+
+				const incomingTrip = action.payload.data;
+
+				// --- İŞTE SİHİRLİ KONTROL ---
+				// Eğer gelen veri null değilse VE mevcut veri ile string halleri farklıysa güncelle.
+				// JSON.stringify, derin karşılaştırma için en basit yöntemdir.
+				if (incomingTrip && JSON.stringify(state.activeTrip) !== JSON.stringify(incomingTrip)) {
+					console.log("API'den farklı veri geldi, activeTrip güncelleniyor.");
+					state.activeTrip = incomingTrip;
+					localStorage.setItem('currentTrip', JSON.stringify(incomingTrip));
+				} else if (!incomingTrip) {
+					console.log("API'den boş veri geldi, activeTrip temizleniyor.");
+					state.activeTrip = null;
+					localStorage.removeItem('currentTrip');
+				} else {
+					// Eğer veri aynıysa, hiçbir şey yapma! State referansı değişmez, render tetiklenmez.
+					console.log("API'den gelen veri lokaldeki ile aynı, render tetiklenmeyecek.");
+				}
+
+			
 			})
 			.addCase(fetchActiveTrip.rejected, (state, action) => {
 				state.loading = false;

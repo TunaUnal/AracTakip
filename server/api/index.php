@@ -234,6 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 		case 'activeTrip':
 			check_auth(); //Login yeterli
+			sleep(5);
 			$sql = "
 				SELECT 
 					t.*, 

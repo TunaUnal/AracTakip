@@ -3,7 +3,7 @@ import Header from '../components/GeneralComponents/Header'
 import Sidebar from '../components/GeneralComponents/Sidebar'
 import Footer from '../components/GeneralComponents/Footer'
 import { useSelector } from 'react-redux'
-
+import { memo } from 'react'
 import ActiveTripComponent from '../components/ActiveTripPageComponents/ActiveTripComponent'
 
 function ActiveTripPage() {
@@ -18,7 +18,6 @@ function ActiveTripPage() {
     if (!trip.activeTrip) {
         return <div>Aktif bir seyehatiniz bulunmamaktadır.</div>;
     }
-
 
 
     return (
@@ -43,4 +42,4 @@ function ActiveTripPage() {
     )
 }
 
-export default ActiveTripPage
+export default memo(ActiveTripPage)
